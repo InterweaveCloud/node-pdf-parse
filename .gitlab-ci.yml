@@ -1,5 +1,3 @@
-#image: flightstats/nightmare-runner
-#image: aheuermann/electron:latest
 image: node:8.9.3
 
 stages:
@@ -14,15 +12,10 @@ before_script:
   - git config --global user.name $GITLAB_USER_LOGIN
   - apt-get update -qq
   - apt-get install -qq -y xvfb libgtk2.0-0 libnotify4 libgconf-2-4 libnss3 libxss1
-  #- apt-get install -y xvfb libgtk2.0-0 libnotify4 libgconf-2-4 libnss3 libxss1 x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps clang wget libgtk2.0 libasound2 libcups2 libxss1 libnss3-dev gcc-multilib 
   - Xvfb :99 -screen 0 1024x768x24 +extension RANDR > /dev/null 2>&1 &
   - export DISPLAY=':99.0'
-  #- Xvfb -ac -screen scrn 1280x2000x24 :9.0 &
-  #- export DISPLAY=:9.0 
 
 after_script:
-  #- git commit -a -q -m "ci output added"
-  #- git push ${CI_REPOSITORY_URL//$CI_REGISTRY_PASSWORD/$CI_ACCESS_TOKEN} master
   - echo "end of script"
 
 package_install:
@@ -37,7 +30,6 @@ mocha_test:
     - pwd
     - npm install --save --save-dev --save-exact
     - npm run test
-    #- git commit -a -q -m "ci output added" ${CI_REPOSITORY_URL//$CI_REGISTRY_PASSWORD/$CI_ACCESS_TOKEN} &>/dev/null
 
 version_check:
   stage: version
@@ -56,7 +48,7 @@ version_check:
         echo CURRENT_VERSION=${CURRENT_VERSION}
         git tag v${CURRENT_VERSION} master
         git push ${CI_REPOSITORY_URL//$CI_REGISTRY_PASSWORD/$CI_ACCESS_TOKEN} v${CURRENT_VERSION} -q &>/dev/null
-      fi   
+      fi
 
 npm_publish:
   stage: publish
